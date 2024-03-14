@@ -726,18 +726,26 @@ const sheetmanage = {
             }
         } else {
             if (celldata && celldata.length > 0) {
+                let maxR = row, maxC = column
+                for (let i = 0; i < celldata.length; i++) {
+                    if (item.r > maxR) maxR = item.r
+                    if (item.c > maxC) maxC = item.c
+                }
+                // 直接获取最大行、最大列，生成 maxR * maxC 的空数组
+                data = datagridgrowth([], maxR, maxC);
                 for (let i = 0; i < celldata.length; i++) {
                     let item = celldata[i];
                     let r = item.r;
                     let c = item.c;
                     let v = item.v;
 
-                    if (r >= data.length) {
-                        data = datagridgrowth(data, r - data.length + 1, 0);
-                    }
-                    if (c >= data[0].length) {
-                        data = datagridgrowth(data, 0, c - data[0].length + 1);
-                    }
+                    // 这里如果列很多，往data一点一点concat性能很差，会花费很久
+                    // if (r >= data.length) {
+                    //     data = datagridgrowth(data, r - data.length + 1, 0);
+                    // }
+                    // if (c >= data[0].length) {
+                    //     data = datagridgrowth(data, 0, c - data[0].length + 1);
+                    // }
                     setcellvalue(r, c, data, v);
                 }
             }
